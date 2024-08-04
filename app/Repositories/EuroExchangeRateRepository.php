@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 readonly class EuroExchangeRateRepository
 {
@@ -64,6 +65,13 @@ readonly class EuroExchangeRateRepository
         $now = Carbon::now();
         $rateRelevanceDate = Carbon::createFromFormat('Ymd', $rateRelevanceDate)->startOfDay();
 
+        //prevent duplicates
+        $exists = $this->checkIfEuroExchangeRateExists($currencyId, $rateRelevanceDate);
+
+        if ($exists) {
+            return;
+        }
+
         $query = "
             INSERT INTO euro_exchange_rates (currency_id, rate, rate_relevance_date, created_at, updated_at)
             VALUES (:currency_id, :rate, :rate_relevance_date, :created_at, :updated_at)
@@ -97,6 +105,7 @@ readonly class EuroExchangeRateRepository
         foreach ($exchangeRates['Currencies']['Currency'] as $currency) {
             $currencyCode = $currency['ID'];
             $rate = $currency['Rate'];
+            $date = $exchangeRates['Date'];
 
             $currency = $this->currencyRepository->getCurrencyByCode($currencyCode);
 
@@ -109,7 +118,7 @@ readonly class EuroExchangeRateRepository
             $this->createEuroExchangeRate(
                 currencyId: $currency->id,
                 rate: (float)$rate,
-                rateRelevanceDate: $rateRelevanceDate
+                rateRelevanceDate: $date
             );
         }
     }
@@ -139,5 +148,20 @@ readonly class EuroExchangeRateRepository
             ->orderBy('rate_relevance_date', 'desc')
             ->take(7)
             ->get();
+    }
+
+    private function checkIfEuroExchangeRateExists(
+        int    $currencyId,
+        Carbon $rateRelevanceDate
+    ): null|stdClass
+    {
+        $query = "SELECT * FROM euro_exchange_rates WHERE currency_id = :currency_id AND rate_relevance_date = :rate_relevance_date";
+
+        $payload = [
+            'currency_id' => $currencyId,
+            'rate_relevance_date' => $rateRelevanceDate,
+        ];
+
+        return DB::selectOne($query, $payload);
     }
 }
