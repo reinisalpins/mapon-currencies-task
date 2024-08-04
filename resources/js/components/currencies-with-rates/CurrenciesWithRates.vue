@@ -1,7 +1,7 @@
 <script setup>
 import CurrencyWithExchangeRatesCard from "./CurrencyWithExchangeRatesCard.vue";
 import {useCurrenciesStore} from "../../store/useCurrenciesStore.js";
-import {computed, onMounted, watch} from "vue";
+import {computed, watch} from "vue";
 import {useFilterStore} from "../../store/useFilterStore.js";
 
 const currenciesStore = useCurrenciesStore();
