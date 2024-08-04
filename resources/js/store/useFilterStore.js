@@ -10,27 +10,23 @@ export const useFilterStore = defineStore('filters', {
     }),
     actions: {
         async fetchAvailableDates() {
-            if (!this.availableDates.length > 0) {
-                try {
-                    const response = await axios.get('/api/exchange-rates/available-dates');
-                    this.availableDates = response.data.data;
+            try {
+                const response = await axios.get('/api/exchange-rates/available-dates');
+                this.availableDates = response.data.data;
 
-                    if (this.availableDates.length > 0) {
-                        this.selectedDates.push(response.data.data[0].date);
-                    }
-                } catch (error) {
-                    console.error('Error fetching available dates:', error);
+                if (this.availableDates.length > 0) {
+                    this.selectedDates.push(response.data.data[0].date);
                 }
+            } catch (error) {
+                console.error('Error fetching available dates:', error);
             }
         },
         async fetchCurrencyCodes() {
-            if (!this.currencyCodes.length > 0) {
-                try {
-                    const response = await axios.get('/api/currencies/codes');
-                    this.currencyCodes = response.data.data;
-                } catch (error) {
-                    console.error('Error fetching currency codes:', error);
-                }
+            try {
+                const response = await axios.get('/api/currencies/codes');
+                this.currencyCodes = response.data.data;
+            } catch (error) {
+                console.error('Error fetching currency codes:', error);
             }
         },
         toggleCurrency(currencyCode) {

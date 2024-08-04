@@ -180,33 +180,3 @@ body, * {
     }
 }
 
-.loader-overlay {
-    position: fixed;
-    height: 100%;
-    width: 100%;
-    background-color: #000;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
-    z-index: 9999;;
-    opacity: 0.7;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    .loader {
-        width: 50px;
-        aspect-ratio: 1;
-        border-radius: 50%;
-        background:
-            radial-gradient(farthest-side, #98ca02 94%,#0000) top/8px 8px no-repeat,
-            conic-gradient(#0000 30%, #98ca02);
-        -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 8px),#000 0);
-        animation: l13 1s infinite linear;
-    }
-    @keyframes l13{
-        100%{transform: rotate(1turn)}
-    }
-}
