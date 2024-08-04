@@ -6,7 +6,6 @@ export const useFilterStore = defineStore('filters', {
         currencyCodes: [],
         selectedDates: [],
         selectedCodes: [],
-        latestAvailableDate: null
     }),
     actions: {
         async fetchAvailableDates() {
