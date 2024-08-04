@@ -8,6 +8,7 @@ const currencyCodes = ref([]);
 const availableDates = ref([]);
 
 const selectedDates = ref([]);
+const latestDate = ref('');
 
 const fetchCurrencyCodes = async () => {
     try {
@@ -38,8 +39,21 @@ const fetchAvailableDates = async () => {
     try {
         const response = await axios.get('/api/exchange-rates/available-dates');
         availableDates.value = response.data.data;
+
+        if (availableDates.value.length > 0 && selectedDates.value.length === 0) {
+            setLatestAvailableDate();
+            selectedDates.value = [latestDate.value]
+        }
     } catch (error) {
         console.error('Error fetching available dates:', error);
+    }
+}
+
+const setLatestAvailableDate = () => {
+    for (const dateObj of availableDates.value) {
+        if (dateObj.date > latestDate.value) {
+            latestDate.value = dateObj.date;
+        }
     }
 }
 
@@ -89,7 +103,7 @@ watch(selectedDates, () => {
     </div>
 
     <div class="dates-form">
-        <label>Available dates:</label>
+        <label>Available dates (select none for today):</label>
         <div class="selectable-cards">
             <div v-for="(date, key) in availableDates" :key="key" class="selectable-card"
                  :class="{ selected: selectedDates.includes(date.date) }"

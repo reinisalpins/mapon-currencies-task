@@ -27,10 +27,6 @@ const fetchCurrencies = async () => {
     }
 };
 
-onMounted(() => {
-    fetchCurrencies();
-});
-
 const handleCurrenciesStateChanged = (selectedCurrencies) => {
     queryParams.currencies = selectedCurrencies;
     const filteredQueryParams = Object.fromEntries(
