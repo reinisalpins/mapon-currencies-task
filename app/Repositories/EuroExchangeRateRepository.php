@@ -66,7 +66,7 @@ readonly class EuroExchangeRateRepository
         $rateRelevanceDate = Carbon::createFromFormat('Ymd', $rateRelevanceDate)->startOfDay();
 
         //prevent duplicates
-        $exists = $this->checkIfEuroExchangeRateExists($currencyId, $rateRelevanceDate);
+        $exists = $this->checkIfEuroExchangeRateExists($currencyId, $rateRelevanceDate, $rate);
 
         if ($exists) {
             return;
@@ -152,14 +152,16 @@ readonly class EuroExchangeRateRepository
 
     private function checkIfEuroExchangeRateExists(
         int    $currencyId,
-        Carbon $rateRelevanceDate
+        Carbon $rateRelevanceDate,
+        float  $rate
     ): null|stdClass
     {
-        $query = "SELECT * FROM euro_exchange_rates WHERE currency_id = :currency_id AND rate_relevance_date = :rate_relevance_date";
+        $query = "SELECT * FROM euro_exchange_rates WHERE currency_id = :currency_id AND rate_relevance_date = :rate_relevance_date AND rate = :rate";
 
         $payload = [
             'currency_id' => $currencyId,
             'rate_relevance_date' => $rateRelevanceDate,
+            'rate' => $rate,
         ];
 
         return DB::selectOne($query, $payload);
