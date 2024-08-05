@@ -1,9 +1,6 @@
 
 # How to start project
 
-
-
-
 ## Clone the project
 
 ```
@@ -27,6 +24,21 @@ docker run --rm \
 ./vendor/bin/sail up -d
 ```
 
+## Copy env example file
+
+```
+In project root directory run:
+cp .env.example .env
+```
+
+## Create Database
+
+```
+In project root directory run:
+
+touch ./database/database.sqlite
+```
+
 ## Run the migrations in project directory
 
 ```
@@ -44,4 +56,10 @@ docker run --rm \
 ```
 ./vendor/bin/sail npm install
 ./vendor/bin/sail npm run dev
+```
+
+## Open front-end
+
+```
+http://localhost/
 ```
